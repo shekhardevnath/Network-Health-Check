@@ -1,0 +1,219 @@
+<link rel="stylesheet" href="/nm_tx/ext/calender/calendar.css?random=20051112" media="screen"></link>
+<script language="JavaScript" src="/nm_tx/ext/calender/calendar.js?random=20060118"></script>
+
+<body>
+<!--start main contents table-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="right" width="10" height="10"><img src="/nm_tx/common/image/table/top_lft.gif"></td>
+    <td background="/nm_tx/common/image/table/top_mid.gif"></td>
+    <td align="left" width="10" height="10"><img src="/nm_tx/common/image/table/top_rht.gif"></td>
+  </tr>
+  <tr>
+    <td align="right" width="10" background="/nm_tx/common/image/table/lft_border.gif"></td>
+    <td bgcolor="#FFFFFF" align="left" class="contentArea">
+    <table  class="contentHeader" border="0" width="100%">
+    <tr align="center">
+       <td class="contentHeaderText">Health Check Portal</td>       
+    </tr>
+    {if $message ne ""}
+    <tr bgcolor="white">
+       <td><div align="center"><b><font color="green">{$message|stripslashes}</font></b></div></td>
+    </tr>
+    {/if}
+    </table>
+    <br/>
+    <!---------------------------------------->
+    <!--the application template starts here-->
+    <!---------------------------------------->
+    <form name="hcPortalForm" action="{$SCRIPT_NAME}" method="POST" enctype="multipart/form-data" onsubmit="return doFormSubmit();">
+    	{if $USER_TYPE eq "BO" and $cmd ne "edit" and $cmd ne "search"}
+    	<table border="0" cellpadding="0" cellspacing="5">
+    		<tr>
+    			<td valign="top">
+    	      <table border="0" cellpadding="2" cellspacing="2">
+    	      	<input type="hidden" value="1" id="file_browser_count" name="file_browser_count">
+    	      	<input type="hidden" name="cmd" value="add">
+    	      	<tr>
+    	      		<td colspan="2">&nbsp</td>
+    	      	</tr>
+    	      	<tr>
+    	      		<td><label class="label">HC Type:</label></td>
+    	      		<td>
+    	      			<select name="hc_type" id="hc_type">
+    	        			<option value="">Select One</option>    	        			
+    	        			{foreach from=$hc_type item=item}
+                       <option value="{$item->hc_type}">{$item->hc_type}</<option>
+                    {/foreach}                  	        			  			
+  	          		 </select>
+    	      		</td>    			
+    	      	</tr>
+    	      	<tr>
+    	      		<td><label class="label">Responsible Group:</label></td>
+    	      		<td>
+    	      			<select name="res_group_id" id="res_group_id">
+    	        			<option value="">Select One</option>
+    	        			{foreach from=$group item=item}
+                       <option value="{$item->group_id}">{$item->name}</<option>
+                    {/foreach}              
+  	          		 </select>
+    	      		</td>    			
+    	      	</tr>
+    	      	<tr>
+    	      		<td><label class="label" name="l_comment" id="l_comment">Comment:</label></td>
+    	      		<td><textarea name="comment" id="comment" rows="5" cols="40"></textarea></td>
+    	      	</tr>
+    	      	<tr>
+    	      		<td><label class="label">Attachment</label></td>
+    	      		<td>
+    	      			<input type="file" name="attachment1" size="25">    	      			
+    	      			<a href="JavaScript:Void(0);" onclick="addFileBrowser();"><font size="4">+</font></a>
+    	      			<div id="file_browser_container">    	      				
+    	      			</div>
+    	      		</td>
+    	      	</tr>    	      	
+    	      </table>
+    	    </td>
+    	    <td valign="tp">
+    	    	<table border="0" cellpadding="2" cellspacing="2">
+    	    		<tr>
+    	    			<td colspan="3"><label class="label">Mail TO Recipients:</label></td>    	    			
+    	    		</tr>
+    	    		<tr>    			
+    	      		<td>
+    	      			<select name="to_recipient_list[]" id="to_recipient_list" size="11" multiple style="width:80">              
+                    {foreach from=$group item=item}
+                       <option value="{$item->group_id}">{$item->name}</<option>
+                    {/foreach}              
+                  </select>
+    	      		</td>
+    	      		<td valign="center" align="center">
+    	      			<input type="button" value=">>" onclick="addSelectedOptions('to_recipient_list')"><br><br>
+    	      			<input type="button" value="<<" onclick="removeSelectedOptions('selected_to_recipient_list')">
+    	      		</td>
+    	      		<td>
+    	      			<select name="selected_to_recipient_list[]" id="selected_to_recipient_list" size="11" multiple style="width:80">
+                  </select>
+    	      		</td>
+    	      	</tr>
+    	    	</table>
+    	    </td>
+    	    <td valign="tp">
+    	    	<table border="0" cellpadding="2" cellspacing="2">
+    	    		<tr>
+    	    			<td colspan="3"><label><label class="label">Mail CC Recipients:</label></td>
+    	    		</tr>
+    	    		<tr>    			
+    	      		<td>
+    	      			<select name="cc_recipient_list[]" id="cc_recipient_list" size="11" multiple style="width:80">              
+                    {foreach from=$group item=item}
+                       <option value="{$item->group_id}">{$item->name}</<option>
+                    {/foreach}              
+                  </select>
+    	      		</td>
+    	      		<td valign="center" align="center">
+    	      			<input type="button" value=">>" onclick="addSelectedOptions('cc_recipient_list')"><br><br>
+    	      			<input type="button" value="<<" onclick="removeSelectedOptions('selected_cc_recipient_list')">
+    	      		</td>
+    	      		<td>
+    	      			<select name="selected_cc_recipient_list[]" id="selected_cc_recipient_list" size="11" multiple style="width:80">
+                  </select>
+    	      		</td>
+    	      	</tr>
+    	    	</table>
+    	    </td>
+    	  </tr>
+    	  <tr>    	  	
+    	   	<td colspan="3"><input type="submit" name="submit" value="Submit"> &nbsp <input type="reset" name="reset" value=" Reset "></td>   	    
+    	  </tr>
+      </table>
+      {/if}
+      {if $cmd eq "edit"}
+      <input type="hidden" name="cmd" value="update">
+      <input type="hidden" name="hc_id" value="{$hc_id}">
+      <table cellspacing="5" cellpadding="2" border="0">
+      	<tr>
+      		<td><label class="label">Feedback:</label></td>
+      		<td><textarea name="feedback" id="feedback" value="" rows="5" cols="50"></textarea></td>
+      	</tr>
+      	<tr align="right">
+      		<td colspan="2"><input type="submit" name="submit" value="Submit"> &nbsp <input type="reset" name="reset" value=" Reset "></td>
+      	</tr>
+      </table>
+      {/if}
+    </form>    
+    <table width="100%" border="0" bgcolor="black" cellspacing="0">
+    	<tr><td></td></tr>
+    </table>
+    <form name="hcSearchPage" action="{$SCRIPT_NAME}" method="POST" enctype="multipart/form-data">
+    {if $cmd ne "edit"}	    
+    <table cellspacing="0" cellpadding="0" border="0">
+    	<input type="hidden" name="cmd" value="search">
+    	<tr>
+    		<td><label class="label">HC ID:&nbsp</label></td>
+    		<td><input type="text" name="hc_id" size="5" value="{$hc_id}"></td>
+    		<td><label class="label">&nbsp Start Date:&nbsp</label></td>
+    		<td>
+    			<input type="text" name="start_date" size="12" value="{$start_date}">
+    			<input type="button" value="Cal" onclick="displayCalendar(document.hcSearchPage.start_date,'yyyy-mm-dd',this)">  	  			
+    		</td>    		
+    		<td><label class="label">&nbsp End Date:&nbsp</label></td>
+    		<td>
+    			<input type="text" name="end_date" size="12" value="{$end_date}">
+    			<input type="button" value="Cal" onclick="displayCalendar(document.hcSearchPage.end_date,'yyyy-mm-dd',this)">  	  			
+    		</td>
+    		<td>&nbsp&nbsp&nbsp&nbsp<input type="submit" name="search_submit" value="Search"></td>
+    	</tr>
+    </table>
+    {/if}
+    </form>
+    <table width="100%" cellspacing="1" cellpadding="2" border="0">
+    	<tr bgcolor="#7C93F4">
+    		<td align="center"><b>HC ID</b></td>
+    		<td align="center"><b>HC Type</b></td>
+    		<td><b>Platform</b></td>
+    		<td align="center"><b>Done By</b></td>
+    		<td align="center"><b>HC Date</b></td>
+    		<td><b>Comment</b></td>
+    		<td><b>Attachment</b></td>    		
+    		<td><b>Feedback</b></td>
+    		<td align="center"><b>Feedback Date</b></td>
+    		<td align="center"><b>Status</b></td>
+    	</tr>
+    	{if $hc}
+    	{foreach from=$hc item=item}
+    	<tr bgcolor="#BFCAF9">
+    		<td align="center">
+    			{if $item->status eq "Open"}
+    			<a href="{$SCRIPT_NAME}?cmd=edit&hc_id={$item->hc_id}">{$item->hc_id}</a>
+    			{else}
+    			{$item->hc_id}
+    			{/if}
+    		</td>
+    		<td align="center">{$item->hc_type}</td>
+    		<td>{$item->platform}</td>
+    		<td align="center">{$item->hc_by}</td>
+    		<td align="center">{$item->hc_date}</td>
+    		<td>{$item->comment|stripslashes}</td>
+    		<td>{$item->attachment}</td>    		
+    		<td>{$item->feedback_by}: {$item->feedback|stripslashes}</td>
+    		<td align="center">{$item->feedback_date}</td>
+    		<td align="center">{$item->status}</td>
+    	</tr>
+    	{/foreach}
+    	{/if}
+    </table>
+    <!-------------------------------------->
+    <!--the application template ends here-->
+    <!-------------------------------------->    
+    </td>
+    <td align="left" width="10" background="/nm_tx/common/image/table/rht_border.gif"></td>
+  </tr>
+  <tr>
+    <td align="right" width="10" height="10"><img src="/nm_tx/common/image/table/bttm_lft.gif"></td>
+    <td background="/nm_tx/common/image/table/bttm_mid.gif"></td>
+    <td align="left" width="10" height="10"><img src="/nm_tx/common/image/table/bttm_rht.gif"></td>
+  </tr>
+</table>
+<!--end main contents table-->
+</body>
